@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 
 // props
 const { modelValue, type, name, placeholder } = defineProps({
@@ -29,7 +29,11 @@ const { modelValue, type, name, placeholder } = defineProps({
 const emits = defineEmits(["update:modelValue"]);
 
 // data
-const currentValue = ref('');
+const inputRef = ref(null);
+
+onMounted(() => {
+  inputRef.value.value = checkValidation(modelValue);
+});
 
 // computed
 const getType = computed(() => {
@@ -53,34 +57,29 @@ const normalize = (data) => {
   return data;
 };
 
-const checkValidation = (e) => {
-  let typingValue = e.target.value;
-
+const checkValidation = (data) => {
   if (normalize("text") == type) {
-    return typingValue;
-  } else if (normalize("number") == type) {
-    const reg = new RegExp("^[0-9]+$");
 
-    if (reg.test(typingValue)) {
-      currentValue.value = typingValue;
-      return currentValue.value;
-    } else {
-      e.target.value = currentValue.value;
-      return currentValue.value;
-    }
+    return data;
+  } else if (normalize("number") == type) {
+
+    return data.replace(/[^0-9]/g, '');
   }
 
-  return typingValue;
+  return data;
 };
 
 const handlerInput = (e) => {
-  emits("update:modelValue", checkValidation(e));
+  e.target.value = checkValidation(e.target.value);
+
+  emits("update:modelValue", e.target.value);
 };
 </script>
 
 <template>
   <div>
     <input
+      ref="inputRef"
       class="border p-2 border-gray-400 rounded-md shadow outline-none focus:border-blue-400 focus:border-2"
       :name="name"
       :type="getType"

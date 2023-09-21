@@ -6,7 +6,7 @@ import Address from "./components/Address.vue";
 const form = reactive({
   name: "Bo Bo",
   email: "",
-  age: "",
+  age: "345345rr",
   address: {
     no: "",
     street: "",
