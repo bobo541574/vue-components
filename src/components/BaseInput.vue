@@ -1,38 +1,57 @@
 <script setup>
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, reactive, ref } from "vue";
 
 // props
-const { modelValue, type, name, placeholder } = defineProps({
-  modelValue: {
-    default: null,
-    type: [String, Number, Boolean],
-    required: false,
-  },
-  type: {
-    default: "text",
-    type: [String],
-    required: false,
-  },
-  name: {
-    default: "name",
-    type: [String],
-    required: true,
-  },
-  placeholder: {
-    default: "",
-    type: [String],
-    required: false,
-  },
-});
+const { modelValue, type, name, placeholder, rounded, border, padding } =
+  defineProps({
+    modelValue: {
+      default: null,
+      type: [String, Number, Boolean],
+      required: false,
+    },
+    type: {
+      default: "text",
+      type: [String],
+      required: false,
+    },
+    name: {
+      default: "name",
+      type: [String],
+      required: true,
+    },
+    placeholder: {
+      default: "",
+      type: [String],
+      required: false,
+    },
+    rounded: {
+      default: "rounded",
+      type: [String],
+      required: false,
+    },
+    border: {
+      default: "border",
+      type: [String],
+      required: false,
+    },
+    padding: {
+      default: "px-2 py-1",
+      type: [String],
+      required: false,
+    },
+  });
 
 // emits
 const emits = defineEmits(["update:modelValue"]);
 
 // data
 const inputRef = ref(null);
+const classes = reactive([]);
 
 onMounted(() => {
-  inputRef.value.value = checkValidation(modelValue);
+  initClasses();
+
+  initValue();
 });
 
 // computed
@@ -44,7 +63,43 @@ const getType = computed(() => {
   return type;
 });
 
+const getName = computed(() => {
+  return name;
+});
+
+const getPlaceholder = computed(() => {
+  return placeholder;
+});
+
 // methods
+const initValue = () => {
+  inputRef.value.value = checkValidation(modelValue);
+};
+
+const setRounded = () => {
+  classes.push(rounded);
+};
+
+const setBorder = () => {
+  classes.push(border);
+};
+
+const setPadding = () => {
+  classes.push(padding);
+};
+
+const getClasses = computed(() => {
+  return classes.join(" ");
+});
+
+const initClasses = () => {
+  setRounded();
+
+  setBorder();
+
+  setPadding();
+};
+
 const normalize = (data) => {
   if (Array.isArray(data)) {
     return data.map((datum) => {
@@ -59,11 +114,9 @@ const normalize = (data) => {
 
 const checkValidation = (data) => {
   if (normalize("text") == type) {
-
     return data;
   } else if (normalize("number") == type) {
-
-    return data.replace(/[^0-9]/g, '');
+    return data.replace(/[^0-9]/g, "");
   }
 
   return data;
@@ -78,12 +131,14 @@ const handlerInput = (e) => {
 
 <template>
   <div>
+    <!-- class="border p-2 border-gray-400 rounded-md shadow outline-none focus:border-blue-400 focus:border-2" -->
+
     <input
       ref="inputRef"
-      class="border p-2 border-gray-400 rounded-md shadow outline-none focus:border-blue-400 focus:border-2"
-      :name="name"
+      :class="getClasses"
+      :name="getName"
       :type="getType"
-      :placeholder="placeholder"
+      :placeholder="getPlaceholder"
       :value="modelValue"
       @input="handlerInput"
     />

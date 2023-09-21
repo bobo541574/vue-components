@@ -20,13 +20,31 @@ const form = reactive({
     <div class="grid col-span-12">
       <div class="col-span-12 grid grid-cols-3 gap-8 mb-6">
         <div class="col-span-1">
-          <BaseInput v-model="form.name" type="text" name="name" placeholder="Name" />
+          <BaseInput
+            v-model="form.name"
+            type="text"
+            name="name"
+            placeholder="Name"
+            rounded="rounded"
+            padding="px-2 py-1"
+            border="border border-gray-500 focus:border-blue-400 focus:border-2"
+          />
         </div>
         <div class="col-span-1">
-          <BaseInput v-model="form.email" type="text" name="email" placeholder="Email" />
+          <BaseInput
+            v-model="form.email"
+            type="text"
+            name="email"
+            placeholder="Email"
+          />
         </div>
         <div class="col-span-1">
-          <BaseInput v-model="form.age" type="number" name="age" placeholder="Age" />
+          <BaseInput
+            v-model="form.age"
+            type="number"
+            name="age"
+            placeholder="Age"
+          />
         </div>
       </div>
       <Address
