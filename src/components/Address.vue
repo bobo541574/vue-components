@@ -1,9 +1,9 @@
 <script setup>
-import { reactive } from "vue";
+import { onMounted, reactive } from "vue";
 import BaseInput from "@/components/BaseInput.vue";
 
 // props
-const props = defineProps({
+const { modelValue } = defineProps({
   modelValue: {
     default: {},
     type: [Object],
@@ -22,6 +22,11 @@ const emits = defineEmits(["update:modelValue"]);
 const form = reactive({
   no: "",
   street: "",
+  quarter: "",
+});
+
+onMounted(() => {
+  Object.assign(form, modelValue);
 });
 
 // methods
@@ -33,12 +38,26 @@ const handlerInput = () => {
 <template>
   <div class="">
     <div class="col-span-1">
-      <BaseInput v-model="form.no" name="no" :placeholder="placeholder.no" @input="handlerInput" />
+      <BaseInput
+        v-model="form.no"
+        name="no"
+        :placeholder="placeholder.no"
+        @input="handlerInput"
+      />
     </div>
     <div class="col-span-1">
       <BaseInput
         v-model="form.street"
-        name="street" :placeholder="placeholder.street"
+        name="street"
+        :placeholder="placeholder.street"
+        @input="handlerInput"
+      />
+    </div>
+    <div class="col-span-1">
+      <BaseInput
+        v-model="form.quarter"
+        name="quarter"
+        :placeholder="placeholder.quarter"
         @input="handlerInput"
       />
     </div>
